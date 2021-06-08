@@ -8,37 +8,27 @@ class AdverserialModel(nn.Module):
   def __init__(this, high_res):
     super().__init__()
     this.model = nn.Sequential(
-      nn.Conv2d(2, 16, 3,padding=1), # 3*3*3*16 = 432
-      nn.BatchNorm2d(16),
+      nn.utils.spectral_norm(nn.Conv2d(2, 16, 3,padding=1)), # 3*3*3*16 = 432
       nn.LeakyReLU(0.2, inplace=True), # 256
-      nn.Conv2d(16, 32, 3,padding=1,stride=2), # 2
-      nn.BatchNorm2d(32),
+      nn.utils.spectral_norm(nn.Conv2d(16, 32, 3,padding=1,stride=2)), # 2
       nn.LeakyReLU(0.2, inplace=True), # 256
-      nn.Conv2d(32, 64, 3,padding=1), # 18 432
-      nn.BatchNorm2d(64),
+      nn.utils.spectral_norm(nn.Conv2d(32, 64, 3,padding=1)), # 18 432
       nn.LeakyReLU(0.2, inplace=True), # 128
-      nn.Conv2d(64, 128, 3,padding=1, stride=2), # 73 728
-      nn.BatchNorm2d(128),
+      nn.utils.spectral_norm(nn.Conv2d(64, 128, 3,padding=1, stride=2)), # 73 728
       nn.LeakyReLU(0.2, inplace=True), # 64
-      nn.Conv2d(128, 256, 3,padding=1, stride=2), # 
-      nn.BatchNorm2d(256),
+      nn.utils.spectral_norm(nn.Conv2d(128, 256, 3,padding=1, stride=2)), # 
       nn.LeakyReLU(0.2, inplace=True), # 32
-      nn.Conv2d(256, 512, 3,padding=1, stride=2), # 
-      nn.BatchNorm2d(512),
+      nn.utils.spectral_norm(nn.Conv2d(256, 512, 3,padding=1, stride=2)), # 
       nn.LeakyReLU(0.2, inplace=True), # 16
-      nn.Conv2d(512, 1024, 3,padding=1, stride=2), #
-      nn.BatchNorm2d(1024),
+      nn.utils.spectral_norm(nn.Conv2d(512, 1024, 3,padding=1, stride=2)), #
       nn.LeakyReLU(0.2, inplace=True), # 8
-      nn.Conv2d(1024, 2048, 3,padding=1, stride=2), #
-      nn.BatchNorm2d(2048),
+      nn.utils.spectral_norm(nn.Conv2d(1024, 2048, 3,padding=1, stride=2)), #
       nn.LeakyReLU(0.2, inplace=True), # 4
       nn.AdaptiveAvgPool2d(2),
-      
       nn.Flatten(),
-      
-      nn.Linear(2048 * 2**2, 128), 
+      nn.utils.spectral_norm(nn.Linear(2048 * 2**2, 128)), 
       nn.LeakyReLU(0.2, inplace=True),
-      nn.Linear(128, 1)
+      nn.utils.spectral_norm(nn.Linear(128, 1))
     )
 
   def forward(this, x):
