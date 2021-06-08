@@ -56,7 +56,7 @@ if __name__ == '__main__':
   
   disc = AdverserialModel(64).to(device)
 
-  optimizer_disc = torch.optim.Adam(disc.parameters(), lr=common_parameters.learning_rate)
+  optimizer_disc = torch.optim.Adam(disc.parameters(), lr=common_parameters.learning_rate*3)
 
   if len(sys.argv) != 3: raise RuntimeError("Two command-line arguments must be given, the model's filename and the type of loss")
   filename = sys.argv[1]
