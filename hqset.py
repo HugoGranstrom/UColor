@@ -61,10 +61,7 @@ class FolderSet(Dataset):
     this.files = glob.glob(f"{root_dir}/*.png")
     random.shuffle(this.files)
     this.length = len(this.files)
-    srgb_p = ImageCms.createProfile("sRGB")
-    lab_p  = ImageCms.createProfile("LAB")
 
-    this.rgb2lab = ImageCms.buildTransformFromOpenProfiles(srgb_p, lab_p, "RGB", "LAB")
       
   def __len__(this):
     return this.length
@@ -75,7 +72,10 @@ class FolderSet(Dataset):
     
     transformed_im = this.crop_transform(im)
     
-    LAB = ImageCms.applyTransform(transformed_im, this.rgb2lab)
+    srgb_p = ImageCms.createProfile("sRGB")
+    lab_p  = ImageCms.createProfile("LAB")
+    rgb2lab = ImageCms.buildTransformFromOpenProfiles(srgb_p, lab_p, "RGB", "LAB")
+    LAB = ImageCms.applyTransform(transformed_im, rgb2lab)
     L, A, B = LAB.split()
     
     Xs = this.toTensor(L)
